@@ -74,24 +74,34 @@ def execute_cmd(cmd,cmd1):
     if cmd == "ctime":
         # сказать текущее время
         now = datetime.datetime.now()
-        speak("Сейчас " + str(now.hour) + " часов "+ " : " + str(now.minute)+ " минут")
+        hour = str()
+        if str(now.hour) in ["11","12","13","14","15","16","17","18","19"]:
+            hour = " часов "
+        elif str(now.hour)[-1] == "1":
+            hour = " час "
+        elif str(now.hour)[-1] in ["2","3","4"]:
+            hour = " часа "
+        elif str(now.hour)[-1] in ["5","6","7","8","9","0"]:
+            hour = " часов "
+        minute = str()
+        if str(now.minute) in ["11","12","13","14","15","16","17","18","19"]:
+            minute = " минут "
+        elif str(now.minute)[-1] == "1":
+            minute = " минута "
+        elif str(now.minute)[-1] in ["2","3","4"]:
+            minute = " минуты "
+        elif str(now.minute)[-1] in ["5","6","7","8","9","0"]:
+            minute = " минут "
+        speak("Сейчас " + str(now.hour) + hour + " : " + str(now.minute)+ minute)
 
     elif cmd == "files":
-        # файл
-        speak("Давайте уточним имя файла")
-        file_name = input()
-        for root, dirs, files in os.walk("C:/"):
-            for name in files:
-                if name.endswith(file_name):
-                    webbrowser.open(os.path.join(root, name))
-                    continue
-                else:
-                    continue
+        #поиск файла
+        parent_dir = os.path.dirname(os.path.abspath(__file__))
+        subprocess.Popen(os.path.join(parent_dir, "search.exe"))
     elif cmd == "folder":
+       #Создание папок
        parent_dir = os.path.dirname(os.path.abspath(__file__))
-       parent_dir = parent_dir.replace("dist\caison", "")
-       subprocess.Popen(os.path.join(parent_dir, "file_creator\\dist\\fg\\fg.exe"))
-       # Папки на рабочем столе
+       subprocess.Popen(os.path.join(parent_dir, "file_creator\\folder_maker.exe"))
     elif cmd == "searcher":
        # поиск в интернете
        webbrowser.open("https://yandex.ru/search/?lr=66&text=" + cmd1.split()[-1] + "&src=suggest_Pers")
@@ -102,7 +112,7 @@ def execute_cmd(cmd,cmd1):
        # создание воркспейсов
        parent_dir = os.path.dirname(os.path.abspath(__file__))
        parent_dir = parent_dir.replace("dist\caison", "")
-       subprocess.Popen(os.path.join(parent_dir, 'work\\dist\\g\\g.exe'))
+       subprocess.Popen(os.path.join(parent_dir, 'output\work_add.exe'))
     else:
         print("Команда не распознана, повторите!")
 
@@ -112,14 +122,8 @@ m = sr.Microphone(device_index=1)
 
 speak_engine = pyttsx3.init()
 
-# Только если у вас установлены голоса для синтеза речи!
-# voices = speak_engine.getProperty('voices')
-# speak_engine.setProperty('voice', voices[4].id)
 speak("Кейсон слушает")
-# for _ in range(50): time.sleep(0.1)  # we're still listening even though the main thread is doing other things
 
-# calling this function requests that the background listener stop listening
-# stop_listening(wait_for_stop=False)
 while True:
     with m as source:
         audio = r.listen(source)

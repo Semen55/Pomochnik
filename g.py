@@ -15,7 +15,7 @@ def speak(what):
 
 def call():
     parent_dir = os.path.dirname(os.path.abspath(__file__))
-    storage_path = os.path.join(parent_dir, 'work\dist\g\data.json')
+    storage_path = os.path.join(parent_dir, 'output\data.json')
     with open(storage_path) as json_file:
         worf = json.load(json_file)
 
@@ -31,3 +31,5 @@ def call():
     if voice in worf:
         for i in worf[voice]:
             webbrowser.open(i)
+    else:
+        speak("Рабочего пространства с таким именем не существует")
